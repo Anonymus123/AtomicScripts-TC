@@ -1,0 +1,6 @@
+AtomicScripts für TrinityCore
+=============================
+
+CodeRewardNPC:  Dieses Script kann verwendet werden, um über bestimmte Codes
+                (welche in der Datenbank festgelegt werden müssen) zB ein bestimmtes
+                Item, Levelups oder anderes zu verschenken.
