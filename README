@@ -1,15 +1,15 @@
-AtomicScripts für TrinityCore
+﻿AtomicScripts für TrinityCore
 =============================
 
 CodeRewardNPC:        Dieses Script kann verwendet werden, um über bestimmte Codes
                       (welche in der Datenbank festgelegt werden müssen) zB ein
-					  bestimmtes Item, Levelups oder anderes zu verschenken.
+                      bestimmtes Item, Levelups oder anderes zu verschenken.
 				
 				
 cmoveCommand:         Das cmoveCommand kann dafür verwendet werden Charaktere von
                       einem Account auf einen anderen zu verschieben ohne dafür jedes
-					  mal in der Datenbank nach dem Charakter und der AccountID suchen
-					  zu müssen.
+                      mal in der Datenbank nach dem Charakter und der AccountID suchen
+                      zu müssen.
 				
 				
 HochzeitsEvent:       Dies ist ein Event welches dafür gedacht ist eine Art Hochzeit
@@ -18,19 +18,19 @@ HochzeitsEvent:       Dies ist ein Event welches dafür gedacht ist eine Art Hoc
 				  
 Kopfgeldjäger:        Mit diesem Script können Spieler mit Hilfe eines Commands ein
                       Kopfgeld auf einen anderen Spieler aussetzen, bzw. überprüfen
-					  wieviel Kopfgeld auf den Spieler im Target ausgesetzt ist, bzw.
-					  eine Art Toplist in der die Top 10 der höchsten ausgesetzten
-					  Kopfgelder aufgelistet sind.
+                      wieviel Kopfgeld auf den Spieler im Target ausgesetzt ist, bzw.
+                      eine Art Toplist in der die Top 10 der höchsten ausgesetzten
+                      Kopfgelder aufgelistet sind.
 				  
 				  
 Teleporter:           Einfaches TeleportScript welches zwischen Allianz und Horde
                       unterscheiden kann und diese dann zur ausgewählten Stadt
-					  teleportiert.
+                      teleportiert.
 				  
 				  
 CustomizeNPC:         Ein NPC der ermöglicht Ingame für einen Goldbetrag einen
                       Rassenwechsel, einen Franktionswechsel, einen
-					  Aussehensswechsel und einen Namenswechsel	zu vergeben.
+                      Aussehensswechsel und einen Namenswechsel	zu vergeben.
 				  
 				  
 DuellReset:           Dieses Script ermöglicht alle Cooldowns nach einem Duell in
@@ -40,8 +40,8 @@ DuellReset:           Dieses Script ermöglicht alle Cooldowns nach einem Duell 
 VIP System &
 VIP NPC:              Ein System bei dem Spieler als VIP ausgezeichnet werden können,
                       dadurch erhöhte Raten erhalten und einen speziellen NPC anreden
-					  können der diesen	dann Items geben kann, Buffs usw
-					  (2 Patch-Dateien).
+                      können der diesen	dann Items geben kann, Buffs usw
+                      (2 Patch-Dateien).
 				  
 				  
 Transmogrification:   Ein System welches euch ermöglicht die Transmogrification aus
