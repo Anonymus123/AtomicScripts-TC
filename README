@@ -8,7 +8,7 @@ CodeRewardNPC:    Dieses Script kann verwendet werden, um über bestimmte Codes
 				
 cmoveCommand:     Das cmoveCommand kann dafür verwendet werden Charaktere von einem Account
                   auf einen anderen zu verschieben ohne dafür jedes mal in der Datenbank nach
-				  dem Charakter und der AccountID suchen zu müssen.
+                  dem Charakter und der AccountID suchen zu müssen.
 				
 				
 HochzeitsEvent:   Dies ist ein Event welches dafür gedacht ist eine Art hochzeit darzustellen
@@ -17,8 +17,8 @@ HochzeitsEvent:   Dies ist ein Event welches dafür gedacht ist eine Art hochzei
 				  
 Kopfgeldjäger:    Mit diesem Script können Spieler mit Hilfe eines Commands ein Kopfgeld auf
                   einen anderen Spieler aussetzen, bzw. überprüfen wieviel Kopfgeld auf den
-				  Spieler im Target ausgesetzt ist, bzw. eine Art Toplist in der die Top 10
-				  der höchsten ausgesetzten Kopfgelder aufgelistet sind.
+                  Spieler im Target ausgesetzt ist, bzw. eine Art Toplist in der die Top 10
+                  der höchsten ausgesetzten Kopfgelder aufgelistet sind.
 				  
 				  
 Teleporter:       Einfaches TeleportScript welches zwischen Allianz und Horde unterscheiden
@@ -26,4 +26,4 @@ Teleporter:       Einfaches TeleportScript welches zwischen Allianz und Horde un
 				  
 				  
     ====================================================================================
-	Sämtliche Scripts die hier angegeben sind, können auf Anfrage auch angepasst werden.
+    Sämtliche Scripts die hier angegeben sind, können auf Anfrage auch angepasst werden.
