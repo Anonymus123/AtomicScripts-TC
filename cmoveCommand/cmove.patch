@@ -1,0 +1,229 @@
+From 6fc8678d288a84b4ccba00986a87d4216da24d4e Mon Sep 17 00:00:00 2001
+From: Anonymus <ano.fk@gmx.de>
+Date: Thu, 16 May 2013 02:45:36 +0200
+Subject: [PATCH] cmove Command
+
+---
+ sql/AtomicCore/world_cmove_command.sql     |   2 +
+ src/server/game/Scripting/ScriptLoader.cpp |   3 +-
+ src/server/scripts/Custom/CMakeLists.txt   |   1 +
+ src/server/scripts/Custom/cs_cmove.cpp     | 192 +++++++++++++++++++++++++++++
+ 4 files changed, 197 insertions(+), 1 deletion(-)
+ create mode 100644 sql/AtomicCore/world_cmove_command.sql
+ create mode 100644 src/server/scripts/Custom/cs_cmove.cpp
+
+diff --git a/sql/AtomicCore/world_cmove_command.sql b/sql/AtomicCore/world_cmove_command.sql
+new file mode 100644
+index 0000000..9f9d9f0
+--- /dev/null
++++ b/sql/AtomicCore/world_cmove_command.sql
+@@ -0,0 +1,2 @@
++INSERT INTO `command` (`name`, `security`, `help`) VALUES
++('cmove', '2', 'Syntax: .cmove [$characterName]/[Charakter im Target] $accountName');
+\ No newline at end of file
+diff --git a/src/server/game/Scripting/ScriptLoader.cpp b/src/server/game/Scripting/ScriptLoader.cpp
+index 5f50247..a75d516 100644
+--- a/src/server/game/Scripting/ScriptLoader.cpp
++++ b/src/server/game/Scripting/ScriptLoader.cpp
+@@ -1293,6 +1293,7 @@ void AddBattlegroundScripts()
+ 
+ #ifdef SCRIPTS
+ /* This is where custom scripts' loading functions should be declared. */
++void AddSC_cs_cmove();
+ 
+ #endif
+ 
+@@ -1300,6 +1301,6 @@ void AddCustomScripts()
+ {
+ #ifdef SCRIPTS
+     /* This is where custom scripts should be added. */
+-
++    AddSC_cs_cmove();
+ #endif
+ }
+diff --git a/src/server/scripts/Custom/CMakeLists.txt b/src/server/scripts/Custom/CMakeLists.txt
+index 99cf026..3c4c35b 100644
+--- a/src/server/scripts/Custom/CMakeLists.txt
++++ b/src/server/scripts/Custom/CMakeLists.txt
+@@ -10,6 +10,7 @@
+ 
+ set(scripts_STAT_SRCS
+   ${scripts_STAT_SRCS}
++  Custom/cs_cmove.cpp
+ )
+ 
+ message("  -> Prepared: Custom")
+diff --git a/src/server/scripts/Custom/cs_cmove.cpp b/src/server/scripts/Custom/cs_cmove.cpp
+new file mode 100644
+index 0000000..8227bf5
+--- /dev/null
++++ b/src/server/scripts/Custom/cs_cmove.cpp
+@@ -0,0 +1,165 @@
++#include "Chat.h"
++#include "Player.h"
++#include "ScriptMgr.h"
++
++class cs_cmove : public CommandScript
++{
++    private:
++        static void getParameter(char const* args, int index, int *begin, int *end)
++        {
++            int i;
++            i = *begin = *end = 0;
++            while(index >= 0)
++            {
++                index--;
++                while(args[i] == ' ' && args[i] != '\0')
++                {
++                    i++;
++                }
++                *begin = i;
++                while(args[i] != ' ' && args[i] != '\0')
++                {
++                    i++;
++                }
++                *end = i;
++            }
++        }
++        
++        static int getAccountID(char const* account)
++        {
++            QueryResult result = LoginDatabase.PQuery("SELECT id FROM account WHERE username = '%s'", account);
++            if(result)
++            {
++                Field *fields = result->Fetch();
++                return fields[0].GetInt32();
++            }
++            else
++            {
++                return 0;
++            }
++        }
++        
++        static int getCharacterID(char const* character)
++        {
++            QueryResult result = CharacterDatabase.PQuery("SELECT guid FROM characters WHERE name = '%s'", character);
++            if(result)
++            {
++                Field *fields = result->Fetch();
++                return fields[0].GetInt32();
++            }
++            else
++            {
++                return 0;
++            }
++        }
++        
++        static bool transferCharacter(int accountID, int characterID)
++        {
++            int countCharacter = 0;
++            QueryResult result = CharacterDatabase.PQuery("SELECT guid FROM characters WHERE account = %i", accountID);
++            if(result)
++            {
++                do
++                {
++                    countCharacter++;
++                }
++                while (result->NextRow());
++            }
++            if(countCharacter < 10)
++                CharacterDatabase.PQuery("UPDATE characters SET account = %i WHERE guid = %i", accountID, characterID);
++            else
++                return false;
++            return true;
++        }
++
++    public:
++        cs_cmove() : CommandScript("cs_cmove") { }
++        ChatCommand* GetCommands() const
++        {
++            static ChatCommand commandTable[] =
++            {
++                { "cmove",		            	SEC_ADMINISTRATOR,         true,	&transfer,		"", NULL },
++                { NULL,							SEC_ADMINISTRATOR,         false,	NULL,			"", NULL }
++            };
++            return commandTable;
++        }
++        
++        static bool transfer(ChatHandler* handler, char const* args)
++        {
++            int begin, end;
++            char *parameter0 = (char *)0, *parameter1 = (char *)0;
++            getParameter(args, 0, &begin, &end);
++            if(end-begin > 0)
++            {
++                parameter0 = new char[end-begin+1];
++                strncpy(parameter0, args+begin, end-begin);
++                parameter0[end-begin] = '\0';
++            }
++            getParameter(args, 1, &begin, &end);
++            if(end-begin > 0)
++            {
++                parameter1 = new char[end-begin+1];
++                strncpy(parameter1, args+begin, end-begin);
++                parameter1[end-begin] = '\0';
++            }
++            if(parameter1)
++            {
++                int accountID = getAccountID(parameter1), characterID = getCharacterID(parameter0);
++                if(!accountID)
++                {
++                    handler->PSendSysMessage("Der Account existiert nicht.");
++                    delete parameter0;
++                    delete parameter1;
++                    return true; 
++                }
++                if(!characterID)
++                {	
++                    handler->PSendSysMessage("Der Charakter existiert nicht.");
++                    delete parameter0;
++                    delete parameter1;
++                    return true;
++                }
++                if(transferCharacter(accountID, characterID))
++                    handler->PSendSysMessage("Der Charakter wurde erfolgreich auf den angegebenen Account verschoben!");
++                else
++                    handler->PSendSysMessage("Der Account hat die Maximalanzahl von Charakteren erreicht!");
++            }
++            else
++            {
++                if(!parameter0)
++                {
++                    handler->PSendSysMessage("Syntax: .cmove [$characterName]/[Charakter im Target] $accountName");
++                    return true;
++                }
++                int accountID = getAccountID(parameter0);
++                if(!accountID)
++                {
++                    handler->PSendSysMessage("Der Account existiert nicht.");
++                    delete parameter0;
++                    return true; 
++                }
++                Player *player = handler->getSelectedPlayer();
++                if(player)
++                {
++                    if(transferCharacter(accountID, player->GetGUID()))
++                        handler->PSendSysMessage("Der Charakter wurde erfolgreich auf den angegebenen Account verschoben!");
++                    else
++                        handler->PSendSysMessage("Der Account hat die Maximalanzahl von Charakteren erreicht !");
++                }
++                else
++                {
++                    handler->PSendSysMessage("Kein Spieler im Target verwende optional: .cmove [$characterName] $accountName.");
++                }
++            }
++            if(parameter0)
++                delete parameter0;
++            if(parameter1)
++                delete parameter1;
++            return true;
++        }
++};
++
++void AddSC_cs_cmove()
++{
++    new cs_cmove();
++}
+-- 
+1.8.1.msysgit.1
+
